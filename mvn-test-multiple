@@ -1,0 +1,21 @@
+#!/bin/bash
+
+testName=$1
+cnt=$2
+
+mkdir -p ./multiple-runs
+
+for i in `seq 1 $cnt`; 
+do
+	rm jxl.log
+	startTime=`date +%s`
+	mvn test -Dcom.outbrain.environment=dev -Dtest=$testName
+	duration=`expr \`date +%s\` - $startTime`
+	echo `date` testName $testName duration $duration testNumber $i result $? >> ./multiple-runs/run-multiple.log
+	scp target/surefire-reports/TEST-com.outbrain.workflow.$testName.xml ./multiple-runs/TEST-com.outbrain.workflow.$testName.xml.$i
+	scp jxl.log ./multiple-runs/jxl.log.$i
+done
+	
+
+
+

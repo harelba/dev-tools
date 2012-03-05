@@ -1,0 +1,28 @@
+#!/bin/bash
+
+project_list=`find ./ -name "pom.xml" | sed 's/\/pom.xml$//'`
+base_folder=`pwd`
+
+rm -rf $base_folder/tmp-deps-summary
+rm -rf $base_folder/tmp-old-method-deps
+rm -rf $base_folder/tmp-new-method-deps
+
+mkdir $base_folder/tmp-deps-summary
+mkdir $base_folder/tmp-old-method-deps
+mkdir $base_folder/tmp-new-method-deps
+
+for proj in `echo "$project_list"` ;
+#for proj in ./WorkflowEngine ;
+do 
+	rm -f $base_folder/tmp-old-method-deps/*
+	rm -f $base_folder/tmp-new-method-deps/*
+	mvn dependency:copy-dependencies -DexcludeArtifactIds=log4j -DexcludeGroupIds=com.outbrain -DoutputDirectory=$base_folder/tmp-old-method-deps -DincludeScope=runtime -am -pl $proj
+#	cd $base_folder/$proj
+#	mvn dependency:copy-dependencies -DexcludeArtifactIds=log4j -DexcludeGroupIds=com.outbrain -DoutputDirectory=$base_folder/tmp-new-method-deps -DincludeScope=runtime
+	mvn dependency:copy-dependencies -DexcludeArtifactIds=log4j -DexcludeGroupIds=com.outbrain -DoutputDirectory=$base_folder/tmp-new-method-deps -DincludeScope=runtime -pl $proj
+	y_project_name=`echo $proj | sed 's/\./_/' | sed 's/\//_/'`
+	echo $y_project_name
+	diff $base_folder/tmp-old-method-deps $base_folder/tmp-new-method-deps > $base_folder/tmp-deps-summary/$y_project_name.diff
+done
+
+

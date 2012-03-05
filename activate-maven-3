@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rm -rf ~/bin/apache-maven
+scp -r ~/bin/apache-maven-3 ~/bin/apache-maven

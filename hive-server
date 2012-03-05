@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Starting hive server"
+$HIVE_HOME/bin/hive --service hiveserver -p 20010

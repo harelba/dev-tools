@@ -1,0 +1,59 @@
+#!/usr/bin/python
+
+# Deprecated - Use q instead - https://github.com/harelba/q
+
+import os,sys
+from optparse import OptionParser
+
+parser = OptionParser()
+parser.add_option("-F","--delimiter",dest="delimiter",default=None,
+                help="delimiter")
+parser.add_option("-f","--key-field-number",dest="key_field_number",default=1,
+                help="key field")
+parser.add_option("-v","--value-field-number",dest="value_field_number",default=2,
+                help="value field")
+parser.add_option("-d","--delimiting-key",dest="delimiting_key",
+                help="delimiting key")
+
+(options,args) = parser.parse_args()
+options.key_field_number = int(options.key_field_number)
+options.value_field_number = int(options.value_field_number)
+
+if len(args) != 0:
+    parser.print_usage()
+    sys.exit(1)
+
+m_keys = []
+m = {}
+
+def collect(key,value):
+	m_keys.append(key)
+	m[key] = value
+
+def parse_line(line):
+	if not options.delimiter:
+		s = line.split()
+	else:
+		s = line.split(options.delimiter)
+	key_field = s[options.key_field_number-1]
+	value_field = s[options.value_field_number-1]
+	eol = key_field == options.delimiting_key
+	return key_field,value_field,eol
+
+row_count = 0
+
+line = sys.stdin.readline()
+while line:
+	k,v,eol = parse_line(line)
+	collect(k,v)
+	if eol:
+		if row_count == 0:
+			print "\t".join(["%-20s" % x for x in m_keys])
+		print "\t".join(["%-20s" % m[x] for x in m_keys])
+		m = {}
+		m_keys= []
+		row_count += 1
+	line = sys.stdin.readline()
+	
+
+

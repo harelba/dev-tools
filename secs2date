@@ -1,0 +1,68 @@
+#!/usr/bin/python
+
+from datetime import datetime
+import sys
+
+from optparse import OptionParser
+
+parser = OptionParser(usage="""
+%prog [options] <file names>
+
+Convert a stream of timestamps to date-times, using the destination time zone (-t) or the local time zone.
+
+Use -r in order to convert a list of specific timestamps in the command line itself
+""")
+
+parser.add_option("-t","--time-zone",dest="time_zone",default="US/Eastern",
+                help="Set the time zone of the results")
+parser.add_option("-r","--raw",dest="raw",default=False,action="store_true",
+                help="Don't read file names from the command lines, but actual timestamps")
+parser.add_option("-f","--full-precision",dest="full_precision",default=False,action="store_true",
+                help="Don't round to one second")
+
+(options,args) = parser.parse_args()
+
+if options.time_zone:
+	try:
+		from pytz import timezone
+	except:
+		print "Cannot convert to target timezone - pytz does not exist"
+		sys.exit(2)
+
+if len(args) == 0:
+    parser.print_usage()
+    sys.exit(1)
+
+def get_date_from_ts(ts,time_zone=None,full_precision=False):
+	if len(ts) == 13:
+		ts = float(ts) / 1000.0
+	elif len(ts) == 16:
+		ts = float(ts) / 1000000.0
+	elif len(ts) == 10:
+		ts = float(ts)
+	else:
+		raise Exception("Unknown timestamp format %s" % ts)
+	if not full_precision:
+		ts = round(ts)
+	if timezone is not None:
+		tz = timezone(time_zone)
+		return datetime.fromtimestamp(ts,tz)
+	else:
+		return datetime.fromtimestamp(ts)
+
+if not options.raw:
+	for filename in args:
+		if filename == '-':
+			f = sys.stdin
+		else:
+			f = file(filename)
+		line = f.readline()
+		while line:
+			line = line.rstrip()
+			print get_date_from_ts(line,options.time_zone,options.full_precision)
+			line = f.readline()
+		if filename != '-':
+			f.close()
+else:
+	for ts in args:
+		print get_date_from_ts(ts,options.time_zone,options.full_precision)

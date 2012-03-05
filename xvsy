@@ -1,0 +1,35 @@
+#!/usr/bin/python
+
+import os,sys
+import pylab
+import time
+from optparse import OptionParser
+from datetime import datetime
+from pytz import timezone
+
+def ts_to_datetime(ts):
+	ts = float(ts) / 1000
+	tz = timezone('US/Eastern')
+	return datetime.fromtimestamp(ts,tz)
+
+parser = OptionParser()
+parser.add_option("-d","--date",dest="date",default=False,action="store_true",
+                help="Treat first parameter as time")
+
+(options,args) = parser.parse_args()
+
+if len(args) == 0 or args[0] == '-':
+	f = sys.stdin
+else:
+	f = file(args[0])
+
+data = [map(float,x.rstrip().split()) for x in f.readlines()]
+
+xs,ys = zip(*data)
+
+
+if options.date:
+	xs = map(lambda x:ts_to_datetime(x),xs)
+
+pylab.scatter(xs,ys)
+pylab.show()

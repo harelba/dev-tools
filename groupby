@@ -1,0 +1,33 @@
+#!/usr/bin/python
+
+# Usage: groupby <colnumber>
+#
+# Count lines per distinct data value in column number colnumber.
+#
+# For example, 'ls -ltrd * | groupby 3' would count the number of files per user.
+#
+# For complete SQL-like capabilities, take a look at "q" at https://github.com/harelba/q
+#
+
+import os,sys
+
+f = [int(x) for x in sys.argv[1].split(",")]
+
+def get_parts(line,field_list):
+	return str([x for (i,x) in enumerate(line.split()) if i in field_list])
+
+mk = []
+m = {}
+
+line = sys.stdin.readline()
+while line:
+	k = get_parts(line,f)
+	if k in mk:
+		m[k] = m[k] + 1
+	else:
+		mk.append(k)
+		m[k] = 1
+	line = sys.stdin.readline()
+
+for k in mk:
+	print "%-15s\t%s" % (m[k],k)

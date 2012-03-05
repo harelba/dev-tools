@@ -1,0 +1,30 @@
+#! /bin/bash
+
+mkdir -p $HOME/.disper
+LOG=~/.disper/display.log
+LAST_STATE_FILE=~/.disper/lastState
+
+NOTIFY="notify-send -u critical -i display Display"
+
+if [ "x$1" == "xstatus" ];
+then
+	echo "Current display profile is $(cat $LAST_STATE_FILE)"
+	exit 2
+fi
+
+if [ ! -f ~/.disper/$1.profile ];
+then
+	echo "Profile '$1' has not been found"
+	exit 1
+fi
+
+disper -i < ~/.disper/$1.profile
+if [ $? -eq 0 ];
+then
+	echo $1 > $LAST_STATE_FILE
+	echo Profile has been set to $1, `date +"%d/%m/%y,%T"` >> $LOG
+	$NOTIFY $1
+else
+	echo Could not set profile to $1, `date +"%d/%m/%y,%T"` >> $LOG
+	echo "Could not change display profile"
+fi

@@ -1,0 +1,22 @@
+#!/usr/bin/python
+
+# Sums up all the numbers from stdin
+
+import os,sys
+
+
+s = 0
+line = sys.stdin.readline()
+while line:
+	try: 
+		s += int(line)
+	except:
+		try:
+			s += float(line)
+		except:
+			sys.exit(2)
+	line = sys.stdin.readline()
+
+print s
+	
+	

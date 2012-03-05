@@ -1,0 +1,12 @@
+#!/usr/bin/python
+
+import os,sys
+
+delimiter = sys.argv[1]
+
+line = sys.stdin.readline()
+while line:
+	line = line[:-1]
+	l = line.split(delimiter)
+	print len(l)	
+	line = sys.stdin.readline()

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# To use this script and the matching disable-company-settings script, the company maven settings file should reside in ~/.m2/company-settings.xml
+
+scp ~/.m2/company-settings.xml ~/.m2/settings.xml
+
