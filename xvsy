@@ -1,5 +1,10 @@
 #!/usr/bin/python
 
+# Draws a graph of x values vs y values - Getting pairs of x,y lines from standard input
+#
+# Requires the matplotlib package
+#
+
 import os,sys
 import pylab
 import time

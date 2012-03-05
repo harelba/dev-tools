@@ -1,5 +1,9 @@
 #!/usr/bin/python
 
+# Converts timestamps to human date-time strings. Run with --help for details.
+#
+#
+
 from datetime import datetime
 import sys
 

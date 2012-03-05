@@ -1,5 +1,10 @@
 #!/usr/bin/python
 
+#
+# Converts standard input lines to their respective column counts
+#
+#
+
 import os,sys
 
 delimiter = sys.argv[1]
