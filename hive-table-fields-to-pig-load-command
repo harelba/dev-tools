@@ -1,0 +1,47 @@
+#!/usr/bin/python
+
+# Run using 'hive -e "describe <tablename>" | hive-table-fields-into-pig-load-command
+#
+#
+
+
+import os,sys
+from optparse import OptionParser
+
+hiveTypeToPigType = {
+	'tinyint' : 'int',
+	'smallint' : 'int',
+	'int' : 'int',
+	'bigint' : 'long',
+	'boolean' : 'boolean',
+	'float' : 'float',
+	'double' : 'double',
+	'string' : 'chararray'
+	# complex data types are not supported for now
+}
+
+parser = OptionParser()
+
+(options,args) = parser.parse_args()
+
+if len(args) != 1:
+    parser.print_usage()
+    sys.exit(1)
+
+source_filename = args[0]
+
+fields = []
+
+f = sys.stdin
+line = f.readline()
+while line:
+	line = line.rstrip()
+	fieldname,fieldtype = line.split()
+	if fieldtype not in hiveTypeToPigType.keys():
+		print >>sys.stderr,"Unknown field type " + fieldtype
+		sys.exit(1)
+	fields.append((fieldname,hiveTypeToPigType[fieldtype]))
+	line = f.readline()
+
+field_list_result = ",".join(["%s : %s" % (x,y) for x,y in fields])
+print "A = LOAD '%s' USING PigStorage('\\t') AS (%s);" % (source_filename,field_list_result)
