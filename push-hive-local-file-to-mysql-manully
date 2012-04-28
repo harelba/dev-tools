@@ -1,0 +1,6 @@
+#!/bin/bash
+
+tablename=$1
+columns=$2
+
+sed 's//,/g' | sed "s/^/INSERT INTO $tablename ($columns) VALUES (/" | sed 's/$/);\nSHOW WARNINGS;\n/'

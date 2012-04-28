@@ -1,0 +1,57 @@
+#!/usr/bin/python
+
+# Draws a graph of x values vs y values - Getting pairs of x,y lines from standard input
+#
+# Requires the matplotlib package
+#
+
+import os,sys
+import pylab
+import time
+from optparse import OptionParser
+from datetime import datetime
+from pytz import timezone
+import numpy as np
+import matplotlib.pyplot as plt
+
+def ts_to_datetime(ts):
+	ts = float(ts) / 1000
+	tz = timezone('US/Eastern')
+	return datetime.fromtimestamp(ts,tz)
+
+parser = OptionParser()
+parser.add_option("-d","--date",dest="date",default=False,action="store_true",
+                help="Treat first parameter as time")
+
+(options,args) = parser.parse_args()
+
+if len(args) == 0 or args[0] == '-':
+	f = sys.stdin
+else:
+	f = file(args[0])
+
+data = [x.rstrip().split() for x in f.readlines()]
+
+xs,ys = zip(*data)
+
+ys = map(float,ys)
+
+if options.date:
+	xs = map(lambda x:ts_to_datetime(x),xs)
+
+ind = np.arange(len(xs))
+width = 1
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.bar(ind,ys,width,color='r')
+
+ax.set_ylabel('y')
+ax.set_title('title')
+ax.set_xticks(ind + width)
+ax.set_xticklabels( xs)
+fig.autofmt_xdate()
+
+plt.show()
+
+

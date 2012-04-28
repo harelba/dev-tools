@@ -10,3 +10,5 @@ hive-0.8.1/
 sqlite3
 sqoop-1.3.0-cdh3u3/
 wfe
+disper-files/display.log
+disper-files/lastState
