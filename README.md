@@ -11,6 +11,7 @@ Some of the tools i'm using in day-to-day development - Residing in ~/bin, along
 * `svn-diff-meld` - Wrapper so svn would work with meld
 * `mvn-test-multiple` - Run a test using maven multiple times, each time saving the log file and the test results to separate files
 * `groupby` - Count lines per distinct data value in column number colnumber.
+* `hive-table-fields-to-pig-load-command` - Converts the output of a hive DESCRIBE command into a Pig LOAD command
 
 # Installations (not included in this source code obviously):
 * apache-maven-2.2/
