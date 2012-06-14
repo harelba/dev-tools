@@ -1,0 +1,25 @@
+#!/usr/bin/python
+
+import os,sys
+import zookeeper
+import time
+from optparse import OptionParser
+from zkutils import *
+
+parser = OptionParser()
+parser.add_option("-s","--server",dest="server",default='storm01.nydc1.outbrain.com:2181',
+                help="zookeeper server list h:p,h:p,h:p")
+
+zookeeper.set_debug_level(zookeeper.LOG_LEVEL_ERROR)
+
+(options,args) = parser.parse_args()
+
+if len(args) != 1:
+    parser.print_help()
+    sys.exit(1)
+
+initialize(options.server)
+
+for n in find_leaves_first(args[0]):
+	print "deleting node " + n
+	delete_node(n)

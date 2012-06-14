@@ -1,0 +1,37 @@
+#!/usr/bin/python
+
+import os,sys
+import zookeeper
+import time
+from optparse import OptionParser
+from zkutils import *
+
+parser = OptionParser()
+parser.add_option("-s","--server",dest="server",default='storm01.nydc1.outbrain.com:2181',
+                help="zookeeper server list h:p,h:p,h:p")
+parser.add_option("-v","--verbose",dest="verbose",default=False,action='store_true',
+                help="verbose mode - prints all node names")
+
+zookeeper.set_debug_level(zookeeper.LOG_LEVEL_ERROR)
+
+(options,args) = parser.parse_args()
+
+if len(args) == 0:
+    parser.print_help()
+    sys.exit(1)
+
+initialize(options.server)
+
+substr = args[0]
+node_names = args[1:]
+
+for node_name in node_names:
+	if options.verbose:
+		print node_name
+	n = get_node(node_name)
+	data = n[0]
+	if substr in data:
+		if options.verbose:
+			print repr(data)
+		else:
+			print node_name
