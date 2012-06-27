@@ -46,3 +46,8 @@ def get_node(node_name):
 def delete_node(node_name):
 	global zh
 	return zookeeper.delete(zh,node_name)
+
+def create_node(node_name,data_str):
+	global zh
+	stat, acl = zookeeper.get_acl(zh, '/')
+	return zookeeper.create(zh,node_name,data_str,acl,0)

@@ -6,7 +6,9 @@ import time
 from optparse import OptionParser
 from zkutils import *
 
-parser = OptionParser()
+parser = OptionParser(usage="""
+	gets two parameters - the path to create and a value string for the node
+""")
 parser.add_option("-s","--server",dest="server",default='storm01.nydc1.outbrain.com:2181',
                 help="zookeeper server list h:p,h:p,h:p")
 
@@ -14,14 +16,10 @@ zookeeper.set_debug_level(zookeeper.LOG_LEVEL_ERROR)
 
 (options,args) = parser.parse_args()
 
-if len(args) != 1:
+if len(args) != 2:
     parser.print_help()
     sys.exit(1)
 
 initialize(options.server)
 
-try:
-	for node_name in find(args[0]):
-		print node_name
-except KeyboardInterrupt,e:
-	pass
+create_node(args[0],args[1])
