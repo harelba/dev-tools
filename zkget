@@ -8,7 +8,7 @@ from zkutils import *
 import pprint
 
 parser = OptionParser()
-parser.add_option("-s","--server",dest="server",default='storm01.nydc1.outbrain.com:2181',
+parser.add_option("-s","--server",dest="server",default='localhost:2181',
                 help="zookeeper server list h:p,h:p,h:p")
 
 zookeeper.set_debug_level(zookeeper.LOG_LEVEL_ERROR)
